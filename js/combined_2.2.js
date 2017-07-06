@@ -40,7 +40,7 @@ var Liverpool = function(data) {
 
 // b. Extract the data (from fixturesStadia) needed:
 var Games = [];
-var teams = []
+var teams = [];
 for (i = 0; i < fixturesStadia.length; i++) {
     // Create instances of new cats
     Games.push({
@@ -53,7 +53,7 @@ for (i = 0; i < fixturesStadia.length; i++) {
         link: fixturesStadia[i]['Club profile'],
         stadium: fixturesStadia[i].Stadium
     });
-    teams.push(fixturesStadia[i].Opponent)
+    teams.push(fixturesStadia[i].Opponent);
 }
 
 /***********************************************
@@ -93,24 +93,23 @@ function ViewModel() {
                 if (regex.test(awayTeam)) {
                     teamNames[e] = d.awayTeamName;
                 }
-            })
+            });
         });
+        var teamPlayers = {};
+        for (var key in teamLinks) {
+            aJaxCall(teamLinks[key] + '/players').done(function(response) {
+                var temp = [];
+                response.players.forEach(function(d) {
+                    var tempObj = {};
+                    tempObj.jerseyNumber = d.jerseyNumber;
+                    tempObj.name = d.name;
+                    tempObj.position = d.position;
+                    temp.push(tempObj);
+                });
+                teamPlayers[key] = temp;
+            });
+        }
     }
-    var teamPlayers = {}
-    for (var key in teamLinks) {
-        aJaxCall(teamLinks[key] + '/players').done(function(response) {
-            var temp = [];
-            response.players.forEach(function(d) {
-                var tempObj = {};
-                tempObj['jerseyNumber'] = d.jerseyNumber;
-                tempObj['name'] = d.name;
-                tempObj['position'] = d.position;
-                temp.push(tempObj);
-            })
-            teamPlayers[key] = temp;
-        })
-    }
-
     // c. Markers
     // c.i. Initialize objects for markers
     var infoWindow = new google.maps.InfoWindow();
@@ -151,9 +150,9 @@ function ViewModel() {
                     return '<span class="jNumber"><a href="#">' + element.jerseyNumber + ':</span> ' + element.name + '<span class="position">(' + element.position + ')</span>  </a>';
                 }).join('');
 
-                htmlOpponent += '<a href="#"><span class="citation"><br/>Team Sheet Provided By: api.football-data.org</span>  </a>'
+                htmlOpponent += '<a href="#"><span class="citation"><br/>Team Sheet Provided By: api.football-data.org</span>  </a>';
 
-                htmlLiverpool += '<a href="#"><span class="citation"><br/>Team Sheet Provided By: api.football-data.org</span>  </a>'
+                htmlLiverpool += '<a href="#"><span class="citation"><br/>Team Sheet Provided By: api.football-data.org</span>  </a>';
 
                 if (location.home() === 'H') {
                     document.getElementById('homePlayers').innerHTML = htmlLiverpool;
@@ -196,7 +195,7 @@ function ViewModel() {
             game.marker.setAnimation(null); // End marker animation after 2 seconds 
         }, 2000);
 
-    }
+    };
 
     // e. Toggle Full Scale Map, extending bounds to full map
     function showGames() {
@@ -229,7 +228,7 @@ function ViewModel() {
     self.monthSearch = ko.observable('');
     self.filteredRecords = ko.computed(function() {
         return ko.utils.arrayFilter(self.gameList(), function(r) {
-            var match = (self.monthSearch().length == 0 || ko.utils.stringStartsWith(r.month().toLowerCase(), self.monthSearch().toLowerCase())) && (self.nameSearch().length == 0 || ko.utils.stringStartsWith(r.opponent().toLowerCase(), self.nameSearch().toLowerCase()))
+            var match = (self.monthSearch().length === 0 || ko.utils.stringStartsWith(r.month().toLowerCase(), self.monthSearch().toLowerCase())) && (self.nameSearch().length === 0 || ko.utils.stringStartsWith(r.opponent().toLowerCase(), self.nameSearch().toLowerCase()));
             if (match) {
                 //If result is true, show correct marker based off users search
                 r.marker.setVisible(true);
@@ -264,7 +263,7 @@ function ViewModel() {
                 type: 'GET',
                 success: function(response) {
 
-                    var titleI = '<div class="iw-title"><b>' + location.opponent() + ' (' + location.home() + ')</b><br/><span class="panoInstruction" style="color:white;font-size:12px";>Click on Image and Use Arrow Keys To View:  ' + location.stadium() + '</span></div> <div class="infoHeaderContainer"> <div class="infoHeaderLeft"><span class="modalLinkText" style="color:#C31014; text-shadow: 1px 1px #800000;";><a href="' + location.link() + '" target="_blank">Home Team Website </a></span><br/><b> ' + location.stadium() + '</b><br/>' + location.time() + ', ' + location.date() + '</div>'
+                    var titleI = '<div class="iw-title"><b>' + location.opponent() + ' (' + location.home() + ')</b><br/><span class="panoInstruction" style="color:white;font-size:12px";>Click on Image and Use Arrow Keys To View:  ' + location.stadium() + '</span></div> <div class="infoHeaderContainer"> <div class="infoHeaderLeft"><span class="modalLinkText" style="color:#C31014; text-shadow: 1px 1px #800000;";><a href="' + location.link() + '" target="_blank">Home Team Website </a></span><br/><b> ' + location.stadium() + '</b><br/>' + location.time() + ', ' + location.date() + '</div>';
                     titleI += information(location, response) + ' </div><span class="citation"><em>(Details Provided By: api.football-data.org)</em></span>';
 
                     // asynchronous query: google.maps.StreetViewStatus
@@ -362,12 +361,12 @@ function ViewModel() {
     });
 
     // k. Show games and attach events to buttons
-    showGames()
+    showGames();
     document.getElementById('show-games').addEventListener('click', showGames);
     document.getElementById('hide-games').addEventListener('click', hideGames);
 
     return self;
-};
+}
 
 //Create Instance of a map from the Google maps api
 //Grab the reference to the "map" id to display map
@@ -383,18 +382,18 @@ function initMap() {
         new google.maps.LatLng(49.383639452689664, -17.39866406249996),
         new google.maps.LatLng(59.53530451232491, 8.968523437500039));
     map = new google.maps.Map(document.getElementById("map"), {
-            center: {
-                lat: 53.4308,
-                lng: -2.9608
-            },
-            zoom: 19,
-            // bounds: bounds,
-            mapTypeId: google.maps.MapTypeId.SATELLITE,
-            mapTypeControlOptions: {
-                mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, 'brownMapType', 'redMapType']
-            },
-            mapTypeControl: true
-        })
-        //Apply viewmodel via knockout
+        center: {
+            lat: 53.4308,
+            lng: -2.9608
+        },
+        zoom: 19,
+        // bounds: bounds,
+        mapTypeId: google.maps.MapTypeId.SATELLITE,
+        mapTypeControlOptions: {
+            mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, 'brownMapType', 'redMapType']
+        },
+        mapTypeControl: true
+    });
+    //Apply viewmodel via knockout
     ko.applyBindings(ViewModel());
-};
+}
