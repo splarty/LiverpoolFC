@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>2017/18 Premier League Season: Liverpool</title>
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Custom CSS depending on Media Query -->
+    <link rel="stylesheet" media="screen and (max-device-width: 800px)" href="css/combined_800_1.0.css" />
+    <link rel="stylesheet" media="screen and (min-device-width: 800px)" href="css/combined_1.0.css" />
+    <!--     Sidebar code derived from:  https://bootstrapious.com/p/bootstrap-sidebar -->
+    <link rel="stylesheet" media="screen and (max-device-width: 800px)" href="css/sidebar_800_1.0.css" />
+    <link rel="stylesheet" media="screen and (min-device-width: 800px)" href="css/sidebar_1.0.css" />
+    <!-- Load football fixtures object and map styles -->
+    <script src='js/fixturesStadia_2018.js'></script>
+    <script src='js/mapStyles_UnsaturatedBrowns.js'></script>
+    <script src='js/mapStyles.js'></script>
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- 1. Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header" id='liverpoolIcon'>
+                <div id='liverpoolIconInner'>
+                    <img src="images/liverpool_marker.png" width="50%" height="50%">
+                    <h3>Liverpool FC</h3>
+                </div>
+            </div>
+            <!-- Searchable Lists -->
+            <ul class="list-unstyled components">
+                <li style=" margin-left : 15px; vertical-align:9px;">
+                    Search Opponent:
+                    <br/>
+                    <input data-bind="value: nameSearch, valueUpdate: 'afterkeydown'" style="background-color:white;
+                        border: solid 1px #6E6E6E;  vertical-align:9px;color:#C31014;" />
+                </li>
+                <li style=" margin-left : 15px; vertical-align:9px;">
+                    Search Month:
+                    <br/>
+                    <input data-bind="value: monthSearch, valueUpdate: 'afterkeydown'" style="background-color:white;
+                        border: solid 1px #6E6E6E;  vertical-align:9px;color:#C31014;" />
+                </li>
+                <h5 style="margin-left : 15px; vertical-align:9px;">Search &amp; Click on Team Name</h5>
+                <li>
+                    <div id='menu' class="col-md-12 left-block list-view" data-bind="foreach: filteredRecords">
+                        </br>
+                        </br>
+                        <span class='searchText list-item' data-bind="text: opponent, click: gamesSelect"></span> (<span class='mediumText' data-bind="text: home"></span>)
+                        <br />
+                        <span class='smallText' data-bind="text: date"></span>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- 2. Page Content-->
+        <div id="content">
+            <!-- Navigation Bar - i.e. Buttons -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                            <i class="glyphicon glyphicon-align-left"></i>
+                            <span>Toggle Sidebar</span>
+                        </button>
+                        <button type="button" id='show-games' type="button" value="Show Games" class="btn btn-info navbar-btn">
+                            <i class="glyphicon glyphicon-eye-open"></i>
+                            <span> &nbsp; Show Games  &nbsp; </span>
+                        </button>
+                        <button type="button" id='hide-games' type="button" value="Hide Games" class="btn btn-info navbar-btn">
+                            <i class="glyphicon glyphicon-home"></i>
+                            <span> &nbsp;&nbsp;Anfield  &nbsp; &nbsp;&nbsp; </span>
+                        </button>
+                    </div>
+                    <!-- Team Sheets Buttons -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul id="playersDiv" class="nav navbar-nav navbar-right">
+                            <li>
+                                <div class="dropdown">
+                                    <button id="homePlayersDiv" type="button" class="dropbtn btn btn-info navbar-btn">
+                                        <i class="glyphicon glyphicon glyphicon-list-alt"></i>
+                                        <span>Home Players</span>
+                                    </button>
+                                    <div class="dropdown-content" id='homePlayers'>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown">
+                                    <button id="awayPlayersDiv" type="button" class="dropbtn btn btn-info navbar-btn">
+                                        <i class="glyphicon glyphicon glyphicon-list-alt"></i>
+                                        <span>Away Players</span>
+                                    </button>
+                                    <div class="dropdown-content" id='awayPlayers'>
+                                    </div>
+                                </div>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- 3. div element for map -->
+            <div id="map"></div>
+        </div>
+    </div>
+    <!-- Bootstrap Js CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- ko Js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <!-- Knockout Search and Map Script -->
+    <script src="js/combined_2.2.js"></script>
+    <!-- Toggle Sidebar -->
+    <script>
+    // Toggle Sidebar
+    $(document).ready(function() {
+        $('#sidebarCollapse').on('click', function() {
+            $('#sidebar').toggleClass('active');
+        });
+        $('#menu').on('click', function() {
+            $("#sidebar").toggleClass("active");
+        });
+    });
+    </script>
+    <!-- 4. load asynchronously, with the callback function 'initMap' -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing,geometry&key=AIzaSyCvPwrwImIstj6RV-L4QLGtHXg-MULUF0E&v=3&callback=initMap"></script>
+</body>
+
+</html>
